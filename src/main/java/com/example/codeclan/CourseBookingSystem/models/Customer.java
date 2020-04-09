@@ -1,5 +1,6 @@
 package com.example.codeclan.CourseBookingSystem.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Customer {
     @Column
     private int age;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "customer")
     private List<Booking> bookings;
 

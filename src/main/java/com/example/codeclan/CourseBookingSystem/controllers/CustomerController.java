@@ -25,4 +25,32 @@ public class CustomerController {
     public ResponseEntity getCustomer(@PathVariable Long id){
         return new ResponseEntity<>(customerRepository.findById(id), HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<Customer> postCustomer(@RequestBody Customer customer){
+        customerRepository.save(customer);
+        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    void deleteCustomer(@PathVariable Long id) {
+        customerRepository.deleteById(id);
+    }
+
+
+    @PutMapping("/{id}")
+    Customer replaceCustomer(@RequestBody Customer newCustomer, @PathVariable Long id) {
+
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customer.setName(newCustomer.getName());
+                    customer.setTown(newCustomer.getTown());
+                    customer.setAge(newCustomer.getAge());
+                    return customerRepository.save(customer);
+                })
+                .orElseGet(() -> {
+                    newCustomer.setId(id);
+                    return customerRepository.save(newCustomer);
+                });
+    }
 }
